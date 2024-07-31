@@ -2,6 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- permisos -->
+	<key>NSCameraUsageDescription</key>
+	<string>Necesitamos acceso a la cámara para tomar fotos.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Necesitamos acceso al micrófono para grabar audio.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Necesitamos acceso a la biblioteca de fotos para seleccionar imágenes.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Necesitamos acceso a tu ubicación para proporcionarte servicios basados en la ubicación.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Necesitamos acceso continuo a tu ubicación para proporcionarte servicios basados en la ubicación.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+	<string>fetch</string>
+	<string>location</string>
+	<string>audio</string>
+	</array>
+	<!-- permisos -->
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
