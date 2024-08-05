@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: _cedulaController,
                     decoration: InputDecoration(labelText: 'Cédula'),
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor ingrese su cédula';

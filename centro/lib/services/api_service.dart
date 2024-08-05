@@ -86,65 +86,79 @@ class ApiService {
     }
   }
 
-  Future<bool> registrarTecnico(Tecnico tecnico) async {
-    final url = Uri.parse('$baseUrl/def/registro.php');
+  Future<Map<String, dynamic>> registrarTecnico(Tecnico tecnico) async {
+    final baseUrl = Uri.parse('https://adamix.net/minerd/def/registro.php');
+    final url = baseUrl.replace(queryParameters: {
+      'cedula': tecnico.cedula,
+      'nombre': tecnico.nombre,
+      'apellido': tecnico.apellido,
+      'clave': tecnico.clave,
+      'correo': tecnico.correo,
+      'telefono': tecnico.telefono,
+      'fecha_nacimiento': tecnico.fechaNacimiento,
+    });
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: tecnico.toJson(),
     );
 
-    final data = json.decode(response.body);
-
     if (response.statusCode == 200) {
-      return data['exito'];
+      final data = json.decode(response.body);
+      return {
+        'exito': data['exito'],
+        'mensaje': data['mensaje'],
+      };
     } else {
-      throw Exception(data['mensaje']);
+      final errorData = json.decode(response.body);
+      throw Exception(errorData['mensaje']);
     }
   }
 
   Future<void> iniciarSesion(String cedula, String clave) async {
-    final url = Uri.parse('$baseUrl/def/iniciar_sesion.php');
+  final bUrl = Uri.parse('$baseUrl/def/iniciar_sesion.php');
 
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'cedula': cedula,
-        'clave': clave,
-      }),
-    );
+  final url = bUrl.replace(queryParameters: {
+    'cedula': cedula,
+    'clave': clave,
+  });
 
-    final data = json.decode(response.body);
+  final response = await http.post(
+    url,
+    headers: {'Content-Type': 'application/json'},
+  );
 
-    if (data['exito']) {
-      final tecnicoData = data['datos'][0];
+  final data = json.decode(response.body);
 
-      SesionActual.token = data['token'];
-      SesionActual.id = tecnicoData['id'];
-      SesionActual.cedula = tecnicoData['cedula'];
-      SesionActual.nombre = tecnicoData['nombre'];
-      SesionActual.apellido = tecnicoData['apellido'];
-      SesionActual.clave = tecnicoData['clave'];
-      SesionActual.correo = tecnicoData['correo'];
-      SesionActual.telefono = tecnicoData['telefono'];
-      SesionActual.fechaNacimiento = tecnicoData['fecha_nacimiento'];
-    } else {
-      throw Exception(data['mensaje']);
-    }
+  if (data['exito']) {
+    final tecnicoData = data['datos'];
+
+    SesionActual.token = tecnicoData['token'] ?? '';
+    SesionActual.id = tecnicoData['id'] ?? '';
+    SesionActual.cedula = cedula;
+    SesionActual.nombre = tecnicoData['nombre'] ?? '';
+    SesionActual.apellido = tecnicoData['apellido'] ?? '';
+    SesionActual.clave = clave;
+    SesionActual.correo = tecnicoData['correo'] ?? '';
+    SesionActual.telefono = tecnicoData['telefono'] ?? '';
+    SesionActual.fechaNacimiento = tecnicoData['fecha_nacimiento'] ?? '';
+  } else {
+    throw Exception(data['mensaje']);
   }
+}
+
   
   Future<bool> recuperarClave(RecuperarClaveRequest request, String text) async {
-    final url = Uri.parse('$baseUrl/def/recuperar_clave.php');
+    final bUrl = Uri.parse('$baseUrl/def/recuperar_clave.php');
+
+    final url = bUrl.replace(queryParameters: {
+    'cedula': request.cedula,
+    'correo': request.correo,
+    });
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'cedula': request.cedula,
-        'correo': request.correo,
-      }),
     );
 
     final data = json.decode(response.body);
@@ -161,12 +175,25 @@ class ApiService {
   }
 
   Future<String> registrarVisita(Visita visita) async {
-    final url = Uri.parse('$baseUrl/minerd/registrar_visita.php');
+    final bUrl = Uri.parse('$baseUrl/minerd/registrar_visita.php');
+
+    final url = bUrl.replace(queryParameters: {
+    'cedula_director': visita.cedulaDirector,
+    'codigo_centro': visita.codigoCentro,
+    'motivo': visita.motivo,
+    'foto_evidencia': visita.fotoEvidencia,
+    'comentario': visita.comentario,
+    'nota_voz': visita.notaVoz,
+    'latitud': visita.latitud,
+    'longitud': visita.longitud,
+    'fecha': visita.fecha,
+    'hora': visita.fecha,
+    'token': SesionActual.token,
+    });
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: visita.toJson(),
     );
 
     final data = json.decode(response.body);
@@ -183,8 +210,13 @@ class ApiService {
   }
 
   Future<List<Situacion>> getSituaciones(String token) async {
-    final url = Uri.parse('$baseUrl/def/situaciones.php');
-    final response = await http.post(url, body: {'token': token});
+    final bUrl = Uri.parse('$baseUrl/def/situaciones.php');
+
+    final url = bUrl.replace(queryParameters: {
+    'token': token
+    });
+
+    final response = await http.post(url);
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -200,11 +232,14 @@ class ApiService {
   }
 
   Future<DetalleVisita> getDetalleSituacion(SituacionRequest request) async {
-      final url = Uri.parse('$baseUrl/def/situacion.php');
-      final response = await http.post(url, body: {
+      final bUrl = Uri.parse('$baseUrl/def/situacion.php');
+
+      final url = bUrl.replace(queryParameters: {
         'token': request.token,
         'situacion_id': request.situacionId.toString(),
       });
+
+      final response = await http.post(url);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -219,12 +254,15 @@ class ApiService {
   }
 
   Future<String> cambiarClave(CambiarClaveRequest request) async {
-    final url = Uri.parse('$baseUrl/def/cambiar_clave.php');
-    final response = await http.post(url, body: {
+    final bUrl = Uri.parse('$baseUrl/def/cambiar_clave.php');
+
+    final url = bUrl.replace(queryParameters: {
       'token': request.token,
       'clave_anterior': request.claveAnterior,
       'clave_nueva': request.claveNueva,
     });
+
+    final response = await http.post(url);
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);

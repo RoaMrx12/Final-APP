@@ -1,6 +1,6 @@
 class SesionActual {
   static String token = '';
-  static int? id;
+  static String id = '';
   static String cedula = '';
   static String nombre = '';
   static String apellido = '';

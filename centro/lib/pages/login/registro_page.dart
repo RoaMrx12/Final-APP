@@ -40,14 +40,14 @@ class _RegistroPageState extends State<RegistroPage> {
       );
 
       try {
-        final exito = await apiService.registrarTecnico(tecnico);
-        if (exito) {
+        final response = await apiService.registrarTecnico(tecnico);
+        if (response['exito'] == true) {
           setState(() {
             _successMessage = 'Registro exitoso';
           });
         } else {
           setState(() {
-            _errorMessage = 'Error en el registro';
+            _errorMessage = response['mensaje'] ?? 'Error en el registro';
           });
         }
       } catch (e) {
