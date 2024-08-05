@@ -102,6 +102,7 @@ class _RecuperarClavePageState extends State<RecuperarClavePage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
+                        //ToDo: arreglar mensaje de error sigue apareciendo incluso en caso de exito
                         _errorMessage,
                         style: TextStyle(color: Colors.red),
                       ),

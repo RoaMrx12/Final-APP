@@ -44,6 +44,13 @@ class BasePage extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: Icon(Icons.visibility_rounded),
+            title: Text('Visitas registradas'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/visitas_registradas');
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.account_circle),
             title: Text('Perfil'),
             onTap: () {

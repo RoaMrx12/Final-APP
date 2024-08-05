@@ -4,9 +4,9 @@ class Visita {
   final String cedulaDirector;
   final String codigoCentro;
   final String motivo;
-  final String fotoEvidencia; // base64 string for the image
+  final String fotoEvidencia;
   final String comentario;
-  final String notaVoz; // base64 string for the audio
+  final String notaVoz; 
   final double latitud;
   final double longitud;
   final String fecha;

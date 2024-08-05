@@ -1,6 +1,7 @@
 import 'package:centro/pages/home.dart';
 import 'package:centro/pages/login/recuperar_clave_page.dart';
 import 'package:centro/pages/login/registro_page.dart';
+import 'package:centro/pages/visitas/visitas_registradas.dart';
 import 'package:flutter/material.dart';
 import 'pages/login/login.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/registro': (context) => RegistroPage(),
         '/recuperar_clave': (context) => RecuperarClavePage(),
+        '/visitas_registradas' : (context) => VisitasRegistradas(),
       },
     );
   }
