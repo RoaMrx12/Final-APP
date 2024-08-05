@@ -1,3 +1,4 @@
+import 'package:centro/pages/visitas/registro_visita.dart';
 import 'package:flutter/material.dart';
 import 'package:centro/services/api_service.dart';
 import 'package:centro/models/centro.dart';
@@ -32,6 +33,17 @@ class _ConsultaEscuelaPageState extends State<ConsultaEscuelaPage> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  void _realizarVisita() {
+    if (_centro != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RegistroVisita(codigoCentro: _centro!.codigo),
+        ),
+      );
     }
   }
 
@@ -76,9 +88,20 @@ class _ConsultaEscuelaPageState extends State<ConsultaEscuelaPage> {
                     title: Text('Nombre: ${_centro!.nombre}'),
                     subtitle: Text(
                       'Código: ${_centro!.codigo}\n'
-                      'Dirección: ${_centro!.coordenadas}',
+                      'Coordenadas: ${_centro!.coordenadas}\n'
+                      'Distrito: ${_centro!.distrito}\n'
+                      'Regional: ${_centro!.regional}\n'
+                      'Director Distrital: ${_centro!.dDmunicipal}',
                     ),
                   ),
+                ),
+              ),
+            if (_centro != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: ElevatedButton(
+                  onPressed: _realizarVisita,
+                  child: Text('Realizar Visita'),
                 ),
               ),
           ],

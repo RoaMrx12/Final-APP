@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:centro/models/visita.dart';
 import 'package:centro/services/api_service.dart';
+import 'package:centro/services/db_service.dart';
 
 class RegistroVisita extends StatefulWidget {
   final String codigoCentro;
@@ -33,7 +34,7 @@ class _RegistroVisitaState extends State<RegistroVisita> {
   @override
   void initState() {
     super.initState();
-    _cedulaDirector = ''; // Inicializar si es necesario
+    _cedulaDirector = '';
     _motivo = '';
     _comentario = '';
     _latitud = '';
@@ -48,9 +49,9 @@ class _RegistroVisitaState extends State<RegistroVisita> {
         cedulaDirector: _cedulaDirector,
         codigoCentro: widget.codigoCentro,
         motivo: _motivo,
-        fotoEvidencia: _fotoEvidencia?.path ?? '',
+        fotoPath: _fotoEvidencia?.path ?? '',
         comentario: _comentario,
-        notaVoz: _notaVoz?.path ?? '',
+        audioPath: _notaVoz?.path ?? '',
         latitud: _latitud,
         longitud: _longitud,
         fecha: _fecha,
@@ -59,6 +60,10 @@ class _RegistroVisitaState extends State<RegistroVisita> {
       );
 
       try {
+        // Guardar en la base de datos local
+        await DatabaseService().insertVisita(visita);
+        
+        // Enviar al servidor remoto
         final mensaje = await ApiService().registrarVisita(visita);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensaje)));
         Navigator.pop(context);
@@ -81,7 +86,7 @@ class _RegistroVisitaState extends State<RegistroVisita> {
     if (await _record.hasPermission()) {
       final directory = await getApplicationDocumentsDirectory();
       final filePath = '${directory.path}/audio_${DateTime.now().millisecondsSinceEpoch}.m4a';
-      await _record.start(path: filePath, encoder: AudioEncoder.AAC_LD);
+      await _record.start(path: filePath, encoder: AudioEncoder.AAC);
       setState(() {
         _notaVoz = File(filePath);
       });
@@ -124,22 +129,6 @@ class _RegistroVisitaState extends State<RegistroVisita> {
                     }
                     return null;
                   },
-                ),
-                if (_fotoEvidencia != null)
-                  Image.file(_fotoEvidencia!, height: 150),
-                ElevatedButton(
-                  onPressed: _pickImage,
-                  child: Text('Tomar Foto de Evidencia'),
-                ),
-                if (_notaVoz != null)
-                  Text('Nota de voz grabada: ${_notaVoz!.path}'),
-                ElevatedButton(
-                  onPressed: _recordAudio,
-                  child: Text('Grabar Nota de Voz'),
-                ),
-                ElevatedButton(
-                  onPressed: _stopRecording,
-                  child: Text('Detener Grabación'),
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Comentario'),
@@ -184,6 +173,23 @@ class _RegistroVisitaState extends State<RegistroVisita> {
                     }
                     return null;
                   },
+                ),
+                SizedBox(height: 20),
+                if (_fotoEvidencia != null)
+                  Image.file(_fotoEvidencia!, height: 150),
+                ElevatedButton(
+                  onPressed: _pickImage,
+                  child: Text('Tomar Foto de Evidencia'),
+                ),
+                if (_notaVoz != null)
+                  Text('Nota de voz grabada: ${_notaVoz!.path}'),
+                ElevatedButton(
+                  onPressed: _recordAudio,
+                  child: Text('Grabar Nota de Voz'),
+                ),
+                ElevatedButton(
+                  onPressed: _stopRecording,
+                  child: Text('Detener Grabación'),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(

@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 class Visita {
+  final int? id;
   final String cedulaDirector;
   final String codigoCentro;
   final String motivo;
-  final String fotoEvidencia;
+  final String fotoPath;
   final String comentario;
-  final String notaVoz; 
+  final String audioPath;
   final String latitud;
   final String longitud;
   final String fecha;
@@ -14,12 +15,13 @@ class Visita {
   final String token;
 
   Visita({
+    this.id,
     required this.cedulaDirector,
     required this.codigoCentro,
     required this.motivo,
-    required this.fotoEvidencia,
+    required this.fotoPath,
     required this.comentario,
-    required this.notaVoz,
+    required this.audioPath,
     required this.latitud,
     required this.longitud,
     required this.fecha,
@@ -28,34 +30,36 @@ class Visita {
   });
 
   factory Visita.fromMap(Map<String, dynamic> json) => Visita(
-        cedulaDirector: json["cedula_director"],
-        codigoCentro: json["codigo_centro"],
-        motivo: json["motivo"],
-        fotoEvidencia: json["foto_evidencia"],
-        comentario: json["comentario"],
-        notaVoz: json["nota_voz"],
-        latitud: json["latitud"],
-        longitud: json["longitud"],
-        fecha: json["fecha"],
-        hora: json["hora"],
-        token: json["token"],
-      );
+    id: json["id"],
+    cedulaDirector: json["cedulaDirector"],
+    codigoCentro: json["codigoCentro"],
+    motivo: json["motivo"],
+    fotoPath: json["fotoPath"],
+    comentario: json["comentario"],
+    audioPath: json["audioPath"],
+    latitud: json["latitud"],
+    longitud: json["longitud"],
+    fecha: json["fecha"],
+    hora: json["hora"],
+    token: json["token"]
+  );
 
   Map<String, dynamic> toMap() => {
-        "cedula_director": cedulaDirector,
-        "codigo_centro": codigoCentro,
-        "motivo": motivo,
-        "foto_evidencia": fotoEvidencia,
-        "comentario": comentario,
-        "nota_voz": notaVoz,
-        "latitud": latitud,
-        "longitud": longitud,
-        "fecha": fecha,
-        "hora": hora,
-        "token": token,
-      };
-
-  String toJson() => json.encode(toMap());
+    "id": id,
+    "cedulaDirector": cedulaDirector,
+    "codigoCentro": codigoCentro,
+    "motivo": motivo,
+    "fotoPath": fotoPath,
+    "comentario": comentario,
+    "audioPath": audioPath,
+    "latitud": latitud,
+    "longitud": longitud,
+    "fecha": fecha,
+    "hora": hora,
+    "token": token,
+  };
 
   factory Visita.fromJson(String source) => Visita.fromMap(json.decode(source));
+
+  String toJson() => json.encode(toMap());
 }
