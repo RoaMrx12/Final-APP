@@ -1,18 +1,18 @@
 import 'dart:convert';
 import 'package:centro/models/cambiar_clave_request.dart';
 import 'package:centro/models/models.dart';
+import 'package:centro/models/recuperar_clave_request.dart';
 import 'package:centro/sesion.dart';
-
 import '../api/api_keys.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
   static const String baseUrl = 'https://adamix.net/minerd';
-  static const String _baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
+  static const String weaterBaseUrl = 'https://api.openweathermap.org/data/2.5/weather';
   static const String _weatherApiKey = Environment.openWeatherApiKey;
 
   Future<Map<String, dynamic>> getWeather(String city) async {
-    final url = Uri.parse('$_baseUrl?q=$city&appid=$_weatherApiKey&units=metric&lang=es');
+    final url = Uri.parse('$weaterBaseUrl?q=$city&appid=$_weatherApiKey&units=metric&lang=es');
 
     final response = await http.get(url);
 
@@ -104,7 +104,7 @@ class ApiService {
     }
   }
 
-   Future<void> iniciarSesion(String cedula, String clave) async {
+  Future<void> iniciarSesion(String cedula, String clave) async {
     final url = Uri.parse('$baseUrl/def/iniciar_sesion.php');
 
     final response = await http.post(
@@ -135,15 +135,15 @@ class ApiService {
     }
   }
   
-  Future<bool> recuperarClave(String cedula, String correo) async {
+  Future<bool> recuperarClave(RecuperarClaveRequest request, String text) async {
     final url = Uri.parse('$baseUrl/def/recuperar_clave.php');
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
-        'cedula': cedula,
-        'correo': correo,
+        'cedula': request.cedula,
+        'correo': request.correo,
       }),
     );
 
@@ -161,7 +161,7 @@ class ApiService {
   }
 
   Future<String> registrarVisita(Visita visita) async {
-    final url = Uri.parse('$_baseUrl/minerd/registrar_visita.php');
+    final url = Uri.parse('$baseUrl/minerd/registrar_visita.php');
 
     final response = await http.post(
       url,
@@ -183,7 +183,7 @@ class ApiService {
   }
 
   Future<List<Situacion>> getSituaciones(String token) async {
-    final url = Uri.parse('$_baseUrl/def/situaciones.php');
+    final url = Uri.parse('$baseUrl/def/situaciones.php');
     final response = await http.post(url, body: {'token': token});
 
     if (response.statusCode == 200) {
@@ -199,8 +199,8 @@ class ApiService {
     }
   }
 
-   Future<DetalleVisita> getDetalleSituacion(SituacionRequest request) async {
-      final url = Uri.parse('$_baseUrl/def/situacion.php');
+  Future<DetalleVisita> getDetalleSituacion(SituacionRequest request) async {
+      final url = Uri.parse('$baseUrl/def/situacion.php');
       final response = await http.post(url, body: {
         'token': request.token,
         'situacion_id': request.situacionId.toString(),
@@ -216,10 +216,10 @@ class ApiService {
       } else {
         throw Exception('Error al obtener la situación');
       }
-   }
+  }
 
   Future<String> cambiarClave(CambiarClaveRequest request) async {
-    final url = Uri.parse('$_baseUrl/def/cambiar_clave.php');
+    final url = Uri.parse('$baseUrl/def/cambiar_clave.php');
     final response = await http.post(url, body: {
       'token': request.token,
       'clave_anterior': request.claveAnterior,

@@ -1,6 +1,7 @@
+import 'package:centro/models/situacion.dart';
+import 'package:centro/services/api_service.dart';
+import 'package:centro/sesion.dart';
 import 'package:flutter/material.dart';
-import 'package:centro/widgets/visita_card.dart';
-import '../models/visita.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,68 +9,91 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<List<Situacion>> futureSituaciones;
 
-
-  final List<Visita> _visitas = [
-    Visita(
-      cedulaDirector: '123456789',
-      codigoCentro: 'C001',
-      motivo: 'Revisión general',
-      fotoEvidencia: '',
-      comentario: 'Comentario sobre la visita 1',
-      notaVoz: '',
-      latitud: 18.4655,
-      longitud: -69.9204,
-      fecha: '2024-07-30',
-      hora: '10:00', 
-      token: '',
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    futureSituaciones = ApiService().getSituaciones(SesionActual.token);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Inicio'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Aquí puedes agregar la funcionalidad de búsqueda
-            },
-          ),
-        ],
+        title: const Text('Visitas Realizadas'),
+        backgroundColor: Colors.blueAccent,
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+        ),
       ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+      drawer: _buildDrawer(context),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FutureBuilder<List<Situacion>>(
+          future: futureSituaciones,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No hay visitas registradas.'));
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final situacion = snapshot.data![index];
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    elevation: 5,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(16.0),
+                      title: Text(situacion.motivo, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      subtitle: Text('${situacion.fecha} ${situacion.hora}'),
+                      onTap: () {
+                        // Navegar a los detalles de la visita si es necesario
+                      },
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Drawer _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
+            ),
             child: Text(
-              'Incidencias',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              'Menú',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
             ),
           ),
-         
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Visitas',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          ..._visitas.map((visita) => VisitaCard(
-            visita: visita,
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Home'),
             onTap: () {
-              // Maneja la acción al hacer clic en una visita
+              Navigator.pushReplacementNamed(context, '/home');
             },
-          )).toList(),
+          ),
+          // Agregar más elementos del menú aquí
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Agregar una nueva incidencia o visita
-        },
-        child: Icon(Icons.add),
       ),
     );
   }
