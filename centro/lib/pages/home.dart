@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:centro/widgets/incidencia_card.dart';
 import 'package:centro/widgets/visita_card.dart';
-import '../models/incidencia.dart';
 import '../models/visita.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,20 +8,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Incidencia> _incidencias = [
-    // Aquí puedes agregar algunas incidencias de ejemplo
-    Incidencia(
-      titulo: 'Incidencia 1',
-      centroEducativo: 'Centro A',
-      regional: 'Regional X',
-      distrito: 'Distrito Y',
-      fecha: '2024-07-30',
-      descripcion: 'Descripción de la incidencia 1',
-      fotoPath: '',
-      audioPath: '',
-    ),
-    // Agrega más incidencias según sea necesario
-  ];
+
 
   final List<Visita> _visitas = [
     // Aquí puedes agregar algunas visitas de ejemplo
@@ -65,12 +50,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          ..._incidencias.map((incidencia) => IncidenciaCard(
-            incidencia: incidencia,
-            onTap: () {
-              // Maneja la acción al hacer clic en una incidencia
-            },
-          )).toList(),
+         
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(

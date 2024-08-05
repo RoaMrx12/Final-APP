@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../models/usuario.dart';
-import '../../services/auth_service.dart';
 
 class RegistroVista extends StatefulWidget {
   @override
@@ -9,25 +7,12 @@ class RegistroVista extends StatefulWidget {
 
 class _RegistroVistaState extends State<RegistroVista> {
   final _formKey = GlobalKey<FormState>();
-  final AuthService _authService = AuthService();
   String _nombre = '';
   String _apellido = '';
   String _matricula = '';
   String _password = '';
 
-  Future<void> _register() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      _formKey.currentState?.save();
-      Usuario usuario = Usuario(
-        nombre: _nombre,
-        apellido: _apellido,
-        matricula: _matricula,
-        password: _password,
-      );
-      await _authService.registerUser(usuario);
-      // Optional: Navigate to a different screen or show a success message
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +39,7 @@ class _RegistroVistaState extends State<RegistroVista> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _register,
+                  onPressed: null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
                     padding: const EdgeInsets.symmetric(vertical: 15.0),
