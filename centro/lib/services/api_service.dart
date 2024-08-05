@@ -41,24 +41,24 @@ class ApiService {
   //Services para Api de Minerd
 
    Future<List<Centro>> getCentros(String regional) async {
-    final url = Uri.parse('$baseUrl/minerd/centros.php?regional=$regional');
+  final url = Uri.parse('$baseUrl/minerd/centros.php?regional=$regional');
 
-    final response = await http.get(url);
+  final response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
 
-      if (data['exito']) {
-        return (data['datos'] as List)
-            .map((centroJson) => Centro.fromMap(centroJson))
-            .toList();
-      } else {
-        throw Exception(data['mensaje']);
-      }
+    if (data['exito']) {
+      return (data['datos'] as List)
+          .map((centroJson) => Centro.fromMap(centroJson))
+          .toList();
     } else {
-      throw Exception('Error al obtener los centros');
+      throw Exception(data['mensaje']);
     }
+  } else {
+    throw Exception('Error al obtener los centros');
   }
+}
 
   Future<List<Noticia>> getNoticias() async {
     final url = Uri.parse('$baseUrl/def/noticias.php');

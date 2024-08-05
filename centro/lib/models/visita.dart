@@ -7,8 +7,8 @@ class Visita {
   final String fotoEvidencia;
   final String comentario;
   final String notaVoz; 
-  final double latitud;
-  final double longitud;
+  final String latitud;
+  final String longitud;
   final String fecha;
   final String hora;
   final String token;

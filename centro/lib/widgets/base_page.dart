@@ -51,17 +51,10 @@ class BasePage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Perfil'),
+            leading: Icon(Icons.search),
+            title: Text('Buscar Escuela'),
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/perfil');
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Configuraciones'),
-            onTap: () {
-              Navigator.pushReplacementNamed(context, '/configuraciones');
+              Navigator.pushReplacementNamed(context, '/consultas');
             },
           ),
           ListTile(

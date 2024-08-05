@@ -2,7 +2,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationService {
-  Future<Position> getCurrentLocation() async {
+  Future<Map<String, double>> getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       await Geolocator.openLocationSettings();
@@ -21,6 +21,7 @@ class LocationService {
       throw Exception('Los permisos de ubicación están denegados permanentemente.');
     }
 
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return {'latitude': position.latitude, 'longitude': position.longitude};
   }
 }
