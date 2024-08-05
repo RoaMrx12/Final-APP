@@ -1,59 +1,59 @@
 import 'dart:convert';
 
 class Visita {
-  final int? id;
   final String cedulaDirector;
   final String codigoCentro;
   final String motivo;
-  final String? fotoEvidenciaPath;
+  final String fotoEvidencia; // base64 string for the image
   final String comentario;
-  final String? notaVozPath;
+  final String notaVoz; // base64 string for the audio
   final double latitud;
   final double longitud;
   final String fecha;
   final String hora;
+  final String token;
 
   Visita({
-    this.id,
     required this.cedulaDirector,
     required this.codigoCentro,
     required this.motivo,
-    this.fotoEvidenciaPath,
+    required this.fotoEvidencia,
     required this.comentario,
-    this.notaVozPath,
+    required this.notaVoz,
     required this.latitud,
     required this.longitud,
     required this.fecha,
     required this.hora,
+    required this.token,
   });
 
   factory Visita.fromMap(Map<String, dynamic> json) => Visita(
-    id: json["id"],
-    cedulaDirector: json["cedulaDirector"],
-    codigoCentro: json["codigoCentro"],
-    motivo: json["motivo"],
-    fotoEvidenciaPath: json["fotoEvidenciaPath"],
-    comentario: json["comentario"],
-    notaVozPath: json["notaVozPath"],
-    latitud: json["latitud"],
-    longitud: json["longitud"],
-    fecha: json["fecha"],
-    hora: json["hora"],
-  );
+        cedulaDirector: json["cedula_director"],
+        codigoCentro: json["codigo_centro"],
+        motivo: json["motivo"],
+        fotoEvidencia: json["foto_evidencia"],
+        comentario: json["comentario"],
+        notaVoz: json["nota_voz"],
+        latitud: json["latitud"],
+        longitud: json["longitud"],
+        fecha: json["fecha"],
+        hora: json["hora"],
+        token: json["token"],
+      );
 
   Map<String, dynamic> toMap() => {
-    "id": id,
-    "cedulaDirector": cedulaDirector,
-    "codigoCentro": codigoCentro,
-    "motivo": motivo,
-    "fotoEvidenciaPath": fotoEvidenciaPath,
-    "comentario": comentario,
-    "notaVozPath": notaVozPath,
-    "latitud": latitud,
-    "longitud": longitud,
-    "fecha": fecha,
-    "hora": hora,
-  };
+        "cedula_director": cedulaDirector,
+        "codigo_centro": codigoCentro,
+        "motivo": motivo,
+        "foto_evidencia": fotoEvidencia,
+        "comentario": comentario,
+        "nota_voz": notaVoz,
+        "latitud": latitud,
+        "longitud": longitud,
+        "fecha": fecha,
+        "hora": hora,
+        "token": token,
+      };
 
   String toJson() => json.encode(toMap());
 

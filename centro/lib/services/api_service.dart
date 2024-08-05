@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'package:centro/models/centro.dart';
-import 'package:centro/models/noticia.dart';
-import 'package:centro/models/tecnico.dart';
-import 'package:centro/models/video.dart';
+import 'package:centro/models/cambiar_clave_request.dart';
+import 'package:centro/models/models.dart';
 import 'package:centro/sesion.dart';
 
 import '../api/api_keys.dart';
@@ -13,7 +11,7 @@ class ApiService {
   static const String _baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
   static const String _weatherApiKey = Environment.openWeatherApiKey;
 
-  Future<Map<String, dynamic>> fetchWeather(String city) async {
+  Future<Map<String, dynamic>> getWeather(String city) async {
     final url = Uri.parse('$_baseUrl?q=$city&appid=$_weatherApiKey&units=metric&lang=es');
 
     final response = await http.get(url);
@@ -30,7 +28,7 @@ class ApiService {
   }
 
   //TO-DO
-  Future<Map<String, dynamic>> fetchHoroscopo() async {
+  Future<Map<String, dynamic>> getHoroscopo() async {
     final response = await http.get(Uri.parse('$baseUrl/horoscopo'));
 
     if (response.statusCode == 200) {
@@ -42,7 +40,7 @@ class ApiService {
 
   //Services para Api de Minerd
 
-   Future<List<Centro>> fetchCentros(String regional) async {
+   Future<List<Centro>> getCentros(String regional) async {
     final url = Uri.parse('$baseUrl/minerd/centros.php?regional=$regional');
 
     final response = await http.get(url);
@@ -62,7 +60,7 @@ class ApiService {
     }
   }
 
-  Future<List<Noticia>> fetchNoticias() async {
+  Future<List<Noticia>> getNoticias() async {
     final url = Uri.parse('$baseUrl/def/noticias.php');
 
     final response = await http.get(url);
@@ -75,7 +73,7 @@ class ApiService {
     }
   }
 
-  Future<List<Video>> fetchVideos() async {
+  Future<List<Video>> getVideos() async {
     final url = Uri.parse('$baseUrl/def/videos.php');
 
     final response = await http.get(url);
@@ -137,4 +135,134 @@ class ApiService {
     }
   }
   
+  Future<bool> recuperarClave(String cedula, String correo) async {
+    final url = Uri.parse('$baseUrl/def/recuperar_clave.php');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'cedula': cedula,
+        'correo': correo,
+      }),
+    );
+
+    final data = json.decode(response.body);
+
+     if (response.statusCode == 200) {
+      if (data['exito']) {
+        return data['mensaje'];
+      } else {
+        throw Exception(data['mensaje']);
+      }
+    } else {
+      throw Exception('Error al recuperar la clave');
+    }
+  }
+
+  Future<String> registrarVisita(Visita visita) async {
+    final url = Uri.parse('$_baseUrl/minerd/registrar_visita.php');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: visita.toJson(),
+    );
+
+    final data = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      if (data['exito']) {
+        return data['mensaje'];
+      } else {
+        throw Exception(data['mensaje']);
+      }
+    } else {
+      throw Exception('Error al registrar la visita');
+    }
+  }
+
+  Future<List<Situacion>> getSituaciones(String token) async {
+    final url = Uri.parse('$_baseUrl/def/situaciones.php');
+    final response = await http.post(url, body: {'token': token});
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['exito']) {
+        final List<dynamic> situacionesJson = data['datos'];
+        return situacionesJson.map((json) => Situacion.fromMap(json)).toList();
+      } else {
+        throw Exception(data['mensaje']);
+      }
+    } else {
+      throw Exception('Error al obtener las situaciones');
+    }
+  }
+
+   Future<DetalleVisita> getDetalleSituacion(SituacionRequest request) async {
+      final url = Uri.parse('$_baseUrl/def/situacion.php');
+      final response = await http.post(url, body: {
+        'token': request.token,
+        'situacion_id': request.situacionId.toString(),
+      });
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['exito']) {
+          return DetalleVisita.fromMap(data['datos']);
+        } else {
+          throw Exception(data['mensaje']);
+        }
+      } else {
+        throw Exception('Error al obtener la situación');
+      }
+   }
+
+  Future<String> cambiarClave(CambiarClaveRequest request) async {
+    final url = Uri.parse('$_baseUrl/def/cambiar_clave.php');
+    final response = await http.post(url, body: {
+      'token': request.token,
+      'clave_anterior': request.claveAnterior,
+      'clave_nueva': request.claveNueva,
+    });
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['exito']) {
+        return data['mensaje'];
+      } else {
+        throw Exception(data['mensaje']);
+      }
+    } else {
+      throw Exception('Error al cambiar la clave');
+    }
+  }
+
+  Future<Centro> getCentroByCodigo(String codigo) async {
+    final url = Uri.parse('$baseUrl/minerd/centros.php?regional=*');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      if (data['exito']) {
+        final centros = (data['datos'] as List)
+            .map((centroJson) => Centro.fromMap(centroJson))
+            .toList();
+
+        try {
+          final centro = centros.firstWhere((centro) => centro.codigo == codigo);
+          return centro;
+        } catch (e) {
+          throw Exception('Centro no encontrado');
+        }
+      } else {
+        throw Exception(data['mensaje']);
+      }
+    } else {
+      throw Exception('Error al obtener los centros');
+    }
+  }
+
 }

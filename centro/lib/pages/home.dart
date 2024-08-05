@@ -11,20 +11,19 @@ class _HomePageState extends State<HomePage> {
 
 
   final List<Visita> _visitas = [
-    // Aquí puedes agregar algunas visitas de ejemplo
     Visita(
       cedulaDirector: '123456789',
       codigoCentro: 'C001',
       motivo: 'Revisión general',
-      fotoEvidenciaPath: '',
+      fotoEvidencia: '',
       comentario: 'Comentario sobre la visita 1',
-      notaVozPath: '',
+      notaVoz: '',
       latitud: 18.4655,
       longitud: -69.9204,
       fecha: '2024-07-30',
-      hora: '10:00',
+      hora: '10:00', 
+      token: '',
     ),
-    // Agrega más visitas según sea necesario
   ];
 
   @override
