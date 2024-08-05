@@ -8,4 +8,16 @@ class SesionActual {
   static String correo = '';
   static String telefono = '';
   static String fechaNacimiento = '';
+
+  static void logout() {
+    token = '';
+    id = '';
+    cedula = '';
+    nombre = '';
+    apellido = '';
+    clave = '';
+    correo = '';
+    telefono = '';
+    fechaNacimiento = '';
+  }
 }

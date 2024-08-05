@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => LoginPage(),
+        '/logout': (context) => LoginPage(),
         '/home': (context) => HomePage(),
         '/registro': (context) => RegistroPage(),
         '/recuperar_clave': (context) => RecuperarClavePage(),
