@@ -74,24 +74,17 @@ class ApiService {
   }
 
   Future<List<Video>> getVideos() async {
-  final url = Uri.parse('$baseUrl/def/videos.php');
+    final url = Uri.parse('$baseUrl/def/videos.php');
+    final response = await http.get(url);
 
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    final data = json.decode(response.body);
-
-    // Asegúrate de que data sea un Map y contiene las claves esperadas
-    if (data is Map<String, dynamic>) {
-      // Extrae el video del mapa y crea una lista con un solo Video
-      return [Video.fromMap(data)];
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final videosData = data['datos'] as List;
+      return videosData.map((videoJson) => Video.fromMap(videoJson)).toList();
     } else {
-      throw Exception('Formato de respuesta inesperado');
+      throw Exception('Error al obtener los videos');
     }
-  } else {
-    throw Exception('Error al obtener los videos');
   }
-}
 
   Future<Map<String, dynamic>> registrarTecnico(Tecnico tecnico) async {
     final baseUrl = Uri.parse('https://adamix.net/minerd/def/registro.php');
