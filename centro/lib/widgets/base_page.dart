@@ -61,7 +61,6 @@ class BasePage extends StatelessWidget {
             leading: Icon(Icons.cloud),
             title: Text('Clima'),
             onTap: () {
-              SesionActual.logout();
               Navigator.pushReplacementNamed(context, '/clima');
             },
           ),
@@ -69,7 +68,6 @@ class BasePage extends StatelessWidget {
             leading: Icon(Icons.newspaper),
             title: Text('Noticias'),
             onTap: () {
-              SesionActual.logout();
               Navigator.pushReplacementNamed(context, '/noticias');
             },
           ),
@@ -77,7 +75,6 @@ class BasePage extends StatelessWidget {
             leading: Icon(Icons.video_collection),
             title: Text('Videos'),
             onTap: () {
-              SesionActual.logout();
               Navigator.pushReplacementNamed(context, '/videos');
             },
           ),

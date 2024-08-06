@@ -1,4 +1,4 @@
-import 'package:centro/models/recuperar_clave_request.dart';
+import 'package:centro/models/requests/recuperar_clave_request.dart';
 import 'package:centro/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:centro/models/cambiar_clave_request.dart';
+import 'package:centro/models/requests/cambiar_clave_request.dart';
 import 'package:centro/models/models.dart';
-import 'package:centro/models/recuperar_clave_request.dart';
+import 'package:centro/models/requests/recuperar_clave_request.dart';
 import 'package:centro/sesion.dart';
 import '../api/api_keys.dart';
 import 'package:http/http.dart' as http;
@@ -187,7 +187,7 @@ class ApiService {
     'latitud': visita.latitud,
     'longitud': visita.longitud,
     'fecha': visita.fecha,
-    'hora': visita.fecha,
+    'hora': visita.hora,
     'token': SesionActual.token,
     });
 
@@ -210,12 +210,10 @@ class ApiService {
   }
 
   Future<List<Situacion>> getSituaciones(String token) async {
-
-    print(SesionActual.token);
     final bUrl = Uri.parse('$baseUrl/def/situaciones.php');
 
     final url = bUrl.replace(queryParameters: {
-    'token': token
+      'token': token
     });
 
     final response = await http.post(url);
@@ -234,25 +232,25 @@ class ApiService {
   }
 
   Future<DetalleVisita> getDetalleSituacion(SituacionRequest request) async {
-      final bUrl = Uri.parse('$baseUrl/def/situacion.php');
+    final bUrl = Uri.parse('$baseUrl/def/situacion.php');
 
-      final url = bUrl.replace(queryParameters: {
-        'token': request.token,
-        'situacion_id': request.situacionId.toString(),
-      });
+    final url = bUrl.replace(queryParameters: {
+      'token': request.token,
+      'situacion_id': request.situacionId.toString(),
+    });
 
-      final response = await http.post(url);
+    final response = await http.post(url);
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['exito']) {
-          return DetalleVisita.fromMap(data['datos']);
-        } else {
-          throw Exception(data['mensaje']);
-        }
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['exito']) {
+        return DetalleVisita.fromMap(data['datos']);
       } else {
-        throw Exception('Error al obtener la situación');
+        throw Exception(data['mensaje']);
       }
+    } else {
+      throw Exception('Error al obtener la situación');
+    }
   }
 
   Future<String> cambiarClave(CambiarClaveRequest request) async {

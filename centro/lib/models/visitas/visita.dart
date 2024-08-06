@@ -30,19 +30,19 @@ class Visita {
   });
 
   factory Visita.fromMap(Map<String, dynamic> json) => Visita(
-  id: json["id"],
-  cedulaDirector: json["cedulaDirector"],
-  codigoCentro: json["codigoCentro"],
-  motivo: json["motivo"],
-  fotoPath: json["fotoPath"],
-  comentario: json["comentario"],
-  audioPath: json["audioPath"],
-  latitud: json["latitud"].toString(),
-  longitud: json["longitud"].toString(),
-  fecha: json["fecha"],
-  hora: json["hora"],
-  token: '' 
-);
+    id: json["id"] is int ? json["id"] : int.tryParse(json["id"] ?? '0'),
+    cedulaDirector: json["cedulaDirector"],
+    codigoCentro: json["codigoCentro"],
+    motivo: json["motivo"],
+    fotoPath: json["fotoPath"],
+    comentario: json["comentario"],
+    audioPath: json["audioPath"],
+    latitud: json["latitud"].toString(),
+    longitud: json["longitud"].toString(),
+    fecha: json["fecha"],
+    hora: json["hora"],
+    token: '' 
+  );
 
   Map<String, dynamic> toMap() => {
   "id": id,

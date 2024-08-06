@@ -1,4 +1,6 @@
-import 'package:centro/models/detalleVisita.dart';
+import 'package:centro/models/visitas/situacion.dart';
+import 'package:centro/models/visitas/detalleVisita.dart';
+import 'package:centro/models/requests/situacion_request.dart';
 import 'package:centro/pages/visitas/detalle_visita.dart';
 import 'package:centro/services/api_service.dart';
 import 'package:centro/sesion.dart';
@@ -12,7 +14,7 @@ class VisitasRegistradas extends StatefulWidget {
 }
 
 class _VisitasRegistradasState extends State<VisitasRegistradas> {
-  late Future<List<dynamic>> futureVisitas;
+  late Future<List<Situacion>> futureVisitas;
 
   @override
   void initState() {
@@ -26,7 +28,7 @@ class _VisitasRegistradasState extends State<VisitasRegistradas> {
       title: 'Visitas Realizadas',
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: FutureBuilder<List<dynamic>>(
+        child: FutureBuilder<List<Situacion>>(
           future: futureVisitas,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -40,20 +42,31 @@ class _VisitasRegistradasState extends State<VisitasRegistradas> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   final visita = snapshot.data![index];
-                  final detalleVisita = DetalleVisita.fromMap(visita);
                   return VisitaCard(
-                    codigoCentro: visita['codigo_centro'],
-                    motivo: visita['motivo'],
-                    fecha: visita['fecha'],
-                    hora: visita['hora'],
-                    onTap: () {
+                    codigoCentro: visita.codigoCentro,
+                    motivo: visita.motivo,
+                    fecha: visita.fecha,
+                    hora: visita.hora,
+                    onTap: () async {
+                    try {
+                      final detalleVisita = await ApiService().getDetalleSituacion(
+                        SituacionRequest(
+                          token: SesionActual.token,
+                          situacionId: visita.id!,
+                        ),
+                      );
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetalleVisitaPage(detalleVisita: detalleVisita),
                         ),
                       );
-                    },
+                    } catch (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error al obtener detalles: $error')),
+                      );
+                    }
+                  },
                   );
                 },
               );

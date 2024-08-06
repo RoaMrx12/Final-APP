@@ -77,7 +77,7 @@ class _ClimaPageState extends State<ClimaPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          _weatherIcon ?? Icons.cloud,
+                          Icons.cloud,
                           size: 100,
                           color: Colors.blueAccent,
                         ),

@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
-import 'package:centro/models/visita.dart';
+import 'package:centro/models/visitas/visita.dart';
 import 'package:centro/services/api_service.dart';
 import 'package:centro/services/db_service.dart';
 import 'package:centro/services/location_service.dart';
@@ -86,7 +86,7 @@ void initState() {
 
         // Enviar por POST
         final mensaje = await ApiService().registrarVisita(visita);
-        
+
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensaje)));
         Navigator.pop(context);
       } catch (e) {
