@@ -66,6 +66,14 @@ class BasePage extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: Icon(Icons.newspaper),
+            title: Text('Noticias'),
+            onTap: () {
+              SesionActual.logout();
+              Navigator.pushReplacementNamed(context, '/noticias');
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.logout),
             title: Text('Cerrar Sesión'),
             onTap: () {

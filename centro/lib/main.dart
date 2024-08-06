@@ -3,6 +3,7 @@ import 'package:centro/pages/consultas/consulta_regionales.dart';
 import 'package:centro/pages/consultas/consultas.dart';
 import 'package:centro/pages/home.dart';
 import 'package:centro/pages/info/clima_page.dart';
+import 'package:centro/pages/info/noticias_page.dart';
 import 'package:centro/pages/login/recuperar_clave_page.dart';
 import 'package:centro/pages/login/registro_page.dart';
 import 'package:centro/pages/visitas/visitas_registradas.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/consultas' : (context) => ConsultasPage(),
         //info
         '/clima' : (context) => ClimaPage(),
+        '/noticias' : (context) => NoticiasPage(),
       },
     );
   }
