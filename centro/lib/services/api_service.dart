@@ -11,8 +11,8 @@ class ApiService {
   static const String weaterBaseUrl = 'https://api.openweathermap.org/data/2.5/weather';
   static const String _weatherApiKey = Environment.openWeatherApiKey;
 
-  Future<Map<String, dynamic>> getWeather(String city) async {
-    final url = Uri.parse('$weaterBaseUrl?q=$city&appid=$_weatherApiKey&units=metric&lang=es');
+  Future<Map<String, dynamic>> getWeather(double latitude, double longitude) async {
+    final url = Uri.parse('$weaterBaseUrl?lat=$latitude&lon=$longitude&appid=$_weatherApiKey&units=metric&lang=es');
 
     final response = await http.get(url);
 

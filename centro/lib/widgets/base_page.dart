@@ -58,6 +58,14 @@ class BasePage extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: Icon(Icons.cloud),
+            title: Text('Clima'),
+            onTap: () {
+              SesionActual.logout();
+              Navigator.pushReplacementNamed(context, '/clima');
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.logout),
             title: Text('Cerrar Sesión'),
             onTap: () {

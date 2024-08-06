@@ -1,3 +1,5 @@
+import 'package:centro/models/detalleVisita.dart';
+import 'package:centro/pages/visitas/detalle_visita.dart';
 import 'package:centro/services/api_service.dart';
 import 'package:centro/sesion.dart';
 import 'package:centro/widgets/base_page.dart';
@@ -10,7 +12,6 @@ class VisitasRegistradas extends StatefulWidget {
 }
 
 class _VisitasRegistradasState extends State<VisitasRegistradas> {
-
   late Future<List<dynamic>> futureVisitas;
 
   @override
@@ -31,7 +32,7 @@ class _VisitasRegistradasState extends State<VisitasRegistradas> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Center(child: Text('Error: No hay tecnico registrado.'));
+              return Center(child: Text('Error: No hay técnico registrado.'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(child: Text('No hay visitas registradas.'));
             } else {
@@ -39,13 +40,19 @@ class _VisitasRegistradasState extends State<VisitasRegistradas> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   final visita = snapshot.data![index];
+                  final detalleVisita = DetalleVisita.fromMap(visita);
                   return VisitaCard(
                     codigoCentro: visita['codigo_centro'],
                     motivo: visita['motivo'],
                     fecha: visita['fecha'],
                     hora: visita['hora'],
                     onTap: () {
-                      // ToDo
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetalleVisitaPage(detalleVisita: detalleVisita),
+                        ),
+                      );
                     },
                   );
                 },

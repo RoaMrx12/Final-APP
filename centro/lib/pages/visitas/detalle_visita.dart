@@ -1,43 +1,56 @@
+import 'package:centro/models/detalleVisita.dart';
 import 'package:flutter/material.dart';
-import '../../models/visita.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'dart:io';
 
-class DetalleVista extends StatelessWidget {
-  final Visita visita;
+class DetalleVisitaPage extends StatelessWidget {
+  final DetalleVisita detalleVisita;
 
-  const DetalleVista({required this.visita, super.key});
+  DetalleVisitaPage({required this.detalleVisita});
 
   @override
   Widget build(BuildContext context) {
+    final audioPlayer = AudioPlayer();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalle de Visita'),
-        backgroundColor: Colors.blueAccent,
+        title: Text('Detalle de Visita'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildInfoCard('Cédula Director', visita.cedulaDirector),
-            _buildInfoCard('Código Centro', visita.codigoCentro),
-            _buildInfoCard('Motivo', visita.motivo),
-            _buildInfoCard('Comentario', visita.comentario),
-            _buildInfoCard('Fecha', visita.fecha),
-            _buildInfoCard('Hora', visita.hora),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Cédula del Director: ${detalleVisita.cedulaDirector}', style: TextStyle(fontSize: 18)),
+              SizedBox(height: 8),
+              Text('Código del Centro: ${detalleVisita.codigoCentro}', style: TextStyle(fontSize: 18)),
+              SizedBox(height: 8),
+              Text('Motivo: ${detalleVisita.motivo}', style: TextStyle(fontSize: 18)),
+              SizedBox(height: 8),
+              Text('Comentario: ${detalleVisita.comentario}', style: TextStyle(fontSize: 18)),
+              SizedBox(height: 8),
+              Text('Latitud: ${detalleVisita.latitud}', style: TextStyle(fontSize: 18)),
+              SizedBox(height: 8),
+              Text('Longitud: ${detalleVisita.longitud}', style: TextStyle(fontSize: 18)),
+              SizedBox(height: 8),
+              Text('Fecha: ${detalleVisita.fecha}', style: TextStyle(fontSize: 18)),
+              SizedBox(height: 8),
+              Text('Hora: ${detalleVisita.hora}', style: TextStyle(fontSize: 18)),
+              SizedBox(height: 16),
+              if (detalleVisita.fotoEvidenciaPath != null && detalleVisita.fotoEvidenciaPath!.isNotEmpty)
+                Image.file(File(detalleVisita.fotoEvidenciaPath!), height: 200),
+              SizedBox(height: 16),
+              if (detalleVisita.notaVozPath != null && detalleVisita.notaVozPath!.isNotEmpty)
+                ElevatedButton(
+                  onPressed: () async {
+                    await audioPlayer.play(DeviceFileSource(detalleVisita.notaVozPath!));
+                  },
+                  child: Text('Reproducir Nota de Voz'),
+                ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoCard(String title, String content) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      elevation: 4,
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16.0),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(content),
       ),
     );
   }

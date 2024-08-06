@@ -2,6 +2,7 @@ import 'package:centro/pages/consultas/consulta_escuela.dart';
 import 'package:centro/pages/consultas/consulta_regionales.dart';
 import 'package:centro/pages/consultas/consultas.dart';
 import 'package:centro/pages/home.dart';
+import 'package:centro/pages/info/clima.dart';
 import 'package:centro/pages/login/recuperar_clave_page.dart';
 import 'package:centro/pages/login/registro_page.dart';
 import 'package:centro/pages/visitas/visitas_registradas.dart';
@@ -25,15 +26,20 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
+        //login
         '/': (context) => LoginPage(),
         '/logout': (context) => LoginPage(),
         '/home': (context) => HomePage(),
         '/registro': (context) => RegistroPage(),
         '/recuperar_clave': (context) => RecuperarClavePage(),
+        //visitas
         '/visitas_registradas' : (context) => VisitasRegistradas(),
+        //consultas
         '/consulta_regionales' : (context) => ConsultaRegionalesPage(),
         '/consulta_escuela': (context) => ConsultaEscuelaPage(),
         '/consultas' : (context) => ConsultasPage(),
+        //info
+        '/clima' : (context) => ClimaPage(),
       },
     );
   }

@@ -6,6 +6,7 @@ import 'package:record/record.dart';
 import 'package:centro/models/visita.dart';
 import 'package:centro/services/api_service.dart';
 import 'package:centro/services/db_service.dart';
+import 'package:centro/services/location_service.dart';
 
 class RegistroVisita extends StatefulWidget {
   final String codigoCentro;
@@ -30,6 +31,7 @@ class _RegistroVisitaState extends State<RegistroVisita> {
 
   final ImagePicker _picker = ImagePicker();
   final Record _record = Record();
+  final LocationService _locationService = LocationService();
 
   @override
   void initState() {
@@ -41,6 +43,19 @@ class _RegistroVisitaState extends State<RegistroVisita> {
     _longitud = '';
     _fecha = '';
     _hora = '';
+    _obtenerUbicacion();
+  }
+
+  Future<void> _obtenerUbicacion() async {
+    try {
+      final ubicacion = await _locationService.getCurrentLocation();
+      setState(() {
+        _latitud = ubicacion['latitude'].toString();
+        _longitud = ubicacion['longitude'].toString();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error obteniendo ubicación: ${e.toString()}')));
+    }
   }
 
   Future<void> _registrarVisita() async {
@@ -55,14 +70,14 @@ class _RegistroVisitaState extends State<RegistroVisita> {
         latitud: _latitud,
         longitud: _longitud,
         fecha: _fecha,
-        hora: _hora, 
+        hora: _hora,
         token: '',
       );
 
       try {
         // Guardar en la base de datos local
         await DatabaseService().insertVisita(visita);
-        
+
         // Enviar al servidor remoto
         final mensaje = await ApiService().registrarVisita(visita);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensaje)));
@@ -136,6 +151,7 @@ class _RegistroVisitaState extends State<RegistroVisita> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Latitud'),
+                  initialValue: _latitud,
                   onChanged: (value) => _latitud = value,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -146,6 +162,7 @@ class _RegistroVisitaState extends State<RegistroVisita> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Longitud'),
+                  initialValue: _longitud,
                   onChanged: (value) => _longitud = value,
                   validator: (value) {
                     if (value == null || value.isEmpty) {

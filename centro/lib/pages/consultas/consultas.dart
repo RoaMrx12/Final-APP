@@ -7,12 +7,12 @@ class ConsultasPage extends StatelessWidget {
     return BasePage(
       title: 'Consultas',
       body: Padding(
-        padding: const EdgeInsets.all(16.0), // Añade padding alrededor de los botones
+        padding: const EdgeInsets.all(16.0), // padding alrededor de los botones
         child: Column(
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8.0), // Añade padding entre los botones y los bordes
+                padding: const EdgeInsets.all(8.0), //padding entre los botones y los bordes
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, '/consulta_regionales');
@@ -35,7 +35,7 @@ class ConsultasPage extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8.0), // Añade padding entre los botones y los bordes
+                padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, '/consulta_escuela');
