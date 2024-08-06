@@ -16,11 +16,11 @@ class Video {
   });
 
   factory Video.fromMap(Map<String, dynamic> json) => Video(
-    id: json["id"],
-    fecha: json["fecha"],
-    titulo: json["titulo"],
-    descripcion: json["descripcion"],
-    link: json["link"],
+    id: json["id"] ?? '',
+    fecha: json["fecha"]?? '',
+    titulo: json["titulo"]?? '',
+    descripcion: json["descripcion"]?? '',
+    link: json["link"]?? '',
   );
 
   Map<String, dynamic> toMap() => {
