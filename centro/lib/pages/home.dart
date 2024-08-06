@@ -1,8 +1,6 @@
-import 'package:centro/widgets/base_page.dart';
-import 'package:centro/widgets/visita_card.dart';
 import 'package:flutter/material.dart';
-import 'package:centro/services/api_service.dart';
-import 'package:centro/sesion.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:centro/widgets/base_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,47 +8,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<List<dynamic>> futureVisitas;
+  late YoutubePlayerController _youtubePlayerController;
 
   @override
   void initState() {
     super.initState();
-    futureVisitas = ApiService().getSituaciones(SesionActual.token);
+
+    // Configurar el controlador de YouTube
+    _youtubePlayerController = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId('https://www.youtube.com/watch?v=lX28t4QeQuI')!,
+      flags: YoutubePlayerFlags(autoPlay: false, mute: false),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return BasePage(
-      title: 'Visitas Realizadas',
+      title: 'Home',
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: FutureBuilder<List<dynamic>>(
-          future: futureVisitas,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: No hay tecnico registrado.'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No hay visitas registradas.'));
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final visita = snapshot.data![index];
-                  return VisitaCard(
-                    codigoCentro: visita['codigo_centro'],
-                    motivo: visita['motivo'],
-                    fecha: visita['fecha'],
-                    hora: visita['hora'],
-                    onTap: () {
-                      // ToDo
-                    },
-                  );
-                },
-              );
-            }
-          },
+        child: Column(
+          children: [
+            Image.asset(
+              'lib/assets/logos/minerdLogoColor.jpeg', 
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(height: 16),
+            // Video de YouTube
+            Container(
+              height: 200,
+              child: YoutubePlayer(
+                controller: _youtubePlayerController,
+                showVideoProgressIndicator: true,
+                progressIndicatorColor: Colors.blueAccent,
+              ),
+            ),
+          ],
         ),
       ),
     );

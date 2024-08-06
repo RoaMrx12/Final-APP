@@ -8,8 +8,13 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   static const String baseUrl = 'https://adamix.net/minerd';
+
   static const String weaterBaseUrl = 'https://api.openweathermap.org/data/2.5/weather';
   static const String _weatherApiKey = Environment.openWeatherApiKey;
+
+  static const String horoscopoUrl = 'https://horoscope-astrology.p.rapidapi.com/horoscope';
+  static const String _horoscopoApiKey = Environment.horoscopoApiKey;
+  final String _apiHost = 'horoscope-astrology.p.rapidapi.com';
 
   Future<Map<String, dynamic>> getWeather(double latitude, double longitude) async {
     final url = Uri.parse('$weaterBaseUrl?lat=$latitude&lon=$longitude&appid=$_weatherApiKey&units=metric&lang=es');
@@ -28,9 +33,18 @@ class ApiService {
   }
 
   //TO-DO
-  Future<Map<String, dynamic>> getHoroscopo() async {
-    final response = await http.get(Uri.parse('$baseUrl/horoscopo'));
+  Future<Map<String, dynamic>> getHoroscopo(String signo) async {
 
+    print(signo);
+    final response = await http.get(
+      Uri.parse('$horoscopoUrl?day=today&sunsign=$signo'),
+      headers: {
+        'x-rapidapi-key': _horoscopoApiKey,
+        'x-rapidapi-host': _apiHost,
+      },
+    );
+
+    print(response.body);
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {

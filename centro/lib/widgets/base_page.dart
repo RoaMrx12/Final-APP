@@ -28,13 +28,37 @@ class BasePage extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.blueAccent,
             ),
-            child: Text(
-              'Menú',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      'lib/assets/logos/menuImagen.png',
+                      height: 80, // Ajusta el tamaño según sea necesario
+                      width: 80, // Ajusta el tamaño según sea necesario
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Menú',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+              ],
             ),
+          ),
+          ListTile(
+            leading: Icon(Icons.account_circle),
+            title: Text('Perfil'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/perfil_tecnico');
+            },
           ),
           ListTile(
             leading: Icon(Icons.home),
@@ -52,7 +76,7 @@ class BasePage extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.search),
-            title: Text('Buscar Escuela'),
+            title: Text('Registrar visita'),
             onTap: () {
               Navigator.pushReplacementNamed(context, '/consultas');
             },
@@ -62,6 +86,13 @@ class BasePage extends StatelessWidget {
             title: Text('Clima'),
             onTap: () {
               Navigator.pushReplacementNamed(context, '/clima');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.blur_circular_outlined),
+            title: Text('Horoscopo'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/horoscopo');
             },
           ),
           ListTile(
@@ -76,6 +107,13 @@ class BasePage extends StatelessWidget {
             title: Text('Videos'),
             onTap: () {
               Navigator.pushReplacementNamed(context, '/videos');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.info_outline),
+            title: Text('About Us'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/about_us');
             },
           ),
           ListTile(
