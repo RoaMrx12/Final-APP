@@ -20,7 +20,9 @@ class ConsultaRegionalesPage extends StatelessWidget {
       body: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: 2.0,
+          childAspectRatio: 1.0, // Hacer que los elementos sean cuadrados
+          crossAxisSpacing: 10.0, // Espaciado horizontal entre los cuadros
+          mainAxisSpacing: 10.0, // Espaciado vertical entre los cuadros
         ),
         itemCount: regionales.length,
         itemBuilder: (context, index) {
@@ -35,8 +37,15 @@ class ConsultaRegionalesPage extends StatelessWidget {
               );
             },
             child: Card(
+              color: Colors.lightBlueAccent, // Color medio azulado
               child: Center(
-                child: Text('Regional $regionalNumber'),
+                child: Text(
+                  'Regional $regionalNumber',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white, // Color del texto
+                  ),
+                ),
               ),
             ),
           );

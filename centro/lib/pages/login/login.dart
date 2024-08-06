@@ -47,11 +47,12 @@ class _LoginPageState extends State<LoginPage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Imagen en la parte superior
-                Container(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
                   margin: EdgeInsets.only(bottom: 20.0),
                   child: Image.asset(
                     'lib/assets/logos/menuImagen.png',
@@ -60,74 +61,75 @@ class _LoginPageState extends State<LoginPage> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                Text(
-                  'Iniciar Sesión',
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 20.0),
-                TextFormField(
-                  controller: _cedulaController,
-                  decoration: InputDecoration(labelText: 'Cédula'),
-                  keyboardType: TextInputType.text,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese su cédula';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20.0),
-                TextFormField(
-                  controller: _claveController,
-                  decoration: InputDecoration(labelText: 'Clave'),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese su clave';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20.0),
-                _isLoading
-                    ? CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: _login,
-                        child: Text('Iniciar Sesión'),
-                      ),
-                if (_errorMessage.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      _errorMessage,
-                      style: TextStyle(color: Colors.red),
-                    ),
+                  Text(
+                    'Iniciar Sesión',
+                    style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                   ),
-                SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => RecuperarClavePage()),
-                        );
-                      },
-                      child: Text('Olvidé mi contraseña'),
+                  SizedBox(height: 20.0),
+                  TextFormField(
+                    controller: _cedulaController,
+                    decoration: InputDecoration(labelText: 'Cédula'),
+                    keyboardType: TextInputType.text,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese su cédula';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20.0),
+                  TextFormField(
+                    controller: _claveController,
+                    decoration: InputDecoration(labelText: 'Clave'),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese su clave';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20.0),
+                  _isLoading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: _login,
+                          child: Text('Iniciar Sesión'),
+                        ),
+                  if (_errorMessage.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        _errorMessage,
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => RegistroPage()),
-                        );
-                      },
-                      child: Text('Registrarse'),
-                    ),
-                  ],
-                ),
-              ],
+                  SizedBox(height: 20.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => RecuperarClavePage()),
+                          );
+                        },
+                        child: Text('Olvidé mi contraseña'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => RegistroPage()),
+                          );
+                        },
+                        child: Text('Registrarse'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

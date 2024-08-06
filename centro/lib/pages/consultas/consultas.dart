@@ -18,7 +18,7 @@ class ConsultasPage extends StatelessWidget {
                     Navigator.pushNamed(context, '/consulta_regionales');
                   },
                   child: Container(
-                    color: Colors.blueAccent,
+                    color: Color.fromARGB(255, 72, 130, 231),
                     child: Center(
                       child: Text(
                         'Consulta Regionales',
@@ -41,7 +41,7 @@ class ConsultasPage extends StatelessWidget {
                     Navigator.pushNamed(context, '/consulta_escuela');
                   },
                   child: Container(
-                    color: Colors.green,
+                    color: Color.fromARGB(255, 72, 130, 231),
                     child: Center(
                       child: Text(
                         'Buscar Escuela',
