@@ -20,7 +20,7 @@ class NoticiaDetailPage extends StatelessWidget {
             Image.network(
               noticia.image,
               errorBuilder: (context, error, stackTrace) {
-                return Icon(Icons.picture_in_picture, size: 100);
+                return Icon(Icons.picture_in_picture, size: 100, color: Colors.grey);
               },
               width: double.infinity, // Ajusta la imagen al ancho del contenedor
               fit: BoxFit.cover, // Ajusta la imagen al contenedor
@@ -29,6 +29,11 @@ class NoticiaDetailPage extends StatelessWidget {
             Text(
               noticia.title,
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              noticia.description,
+              style: TextStyle(fontSize: 16),
             ),
             SizedBox(height: 16),
             Text(

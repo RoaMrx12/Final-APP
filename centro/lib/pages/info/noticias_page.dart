@@ -1,8 +1,8 @@
-import 'package:centro/pages/info/noticia_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:centro/services/api_service.dart';
 import 'package:centro/widgets/base_page.dart';
 import 'package:centro/models/noticia.dart';
+import 'package:centro/pages/info/noticia_detail_page.dart';
 
 class NoticiasPage extends StatefulWidget {
   @override
@@ -40,33 +40,37 @@ class _NoticiasPageState extends State<NoticiasPage> {
                   final noticia = snapshot.data![index];
                   return Card(
                     margin: EdgeInsets.only(bottom: 16.0),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(16.0),
-                      leading: Image.network(
-                        noticia.image,
-                        width: 100,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          // Mostrar el ícono en lugar de la imagen si ocurre un error
-                          return Icon(
-                            Icons.picture_in_picture,
-                            size: 100,
-                            color: Colors.grey,
-                          );
-                        },
-                      ),
-                      title: Text(noticia.title),
-                      trailing: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NoticiaDetailPage(noticia: noticia),
-                            ),
-                          );
-                        },
-                        child: Text('Ver más'),
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.network(
+                          noticia.image,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              Icons.picture_in_picture,
+                              size: 100,
+                              color: Colors.grey,
+                            );
+                          },
+                        ),
+                        ListTile(
+                          contentPadding: EdgeInsets.all(16.0),
+                          title: Text(noticia.title),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NoticiaDetailPage(noticia: noticia),
+                                ),
+                              );
+                            },
+                            child: Text('Ver más'),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
