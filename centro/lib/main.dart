@@ -2,9 +2,12 @@ import 'package:centro/pages/consultas/consulta_escuela.dart';
 import 'package:centro/pages/consultas/consulta_regionales.dart';
 import 'package:centro/pages/consultas/consultas.dart';
 import 'package:centro/pages/home.dart';
+import 'package:centro/pages/info/acerca_de_page.dart';
 import 'package:centro/pages/info/clima_page.dart';
+import 'package:centro/pages/info/horoscopo_page.dart';
 import 'package:centro/pages/info/noticias_page.dart';
 import 'package:centro/pages/info/videos_page.dart';
+import 'package:centro/pages/login/perfil_page.dart';
 import 'package:centro/pages/login/recuperar_clave_page.dart';
 import 'package:centro/pages/login/registro_page.dart';
 import 'package:centro/pages/visitas/visitas_registradas.dart';
@@ -34,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/registro': (context) => RegistroPage(),
         '/recuperar_clave': (context) => RecuperarClavePage(),
+        '/perfil_tecnico': (context) => SesionPage(), 
         //visitas
         '/visitas_registradas' : (context) => VisitasRegistradas(),
         //consultas
@@ -44,6 +48,8 @@ class MyApp extends StatelessWidget {
         '/clima' : (context) => ClimaPage(),
         '/noticias' : (context) => NoticiasPage(),
         '/videos' : (context) => VideosPage(),
+        '/horoscopo': (context) => HoroscopoPage(),
+        '/about_us' : (context) => AboutUs(),
       },
     );
   }

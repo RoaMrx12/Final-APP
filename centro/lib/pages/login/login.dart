@@ -52,6 +52,15 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Container(
+                  margin: EdgeInsets.only(bottom: 20.0),
+                  child: Image.asset(
+                    'lib/assets/logos/menuImagen.png',
+                    height: 100,
+                    width: 100,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                   Text(
                     'Iniciar Sesión',
                     style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
