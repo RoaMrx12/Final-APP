@@ -40,7 +40,7 @@ dependencies:
   #tomas los path de archivos
   path_provider: ^2.0.11
   #http request para las api
-  http: ^1.2.2
+  http: ^0.13.5
   #ubicacion
   geolocator: ^8.2.0
   #solcitar permisos
@@ -59,6 +59,9 @@ dependencies:
   flutter_svg: ^1.0.0
   #fecha y hora
   intl: ^0.18.0
+  #mapa
+  flutter_map: ^4.0.0
+  latlong2: ^0.8.1
   
 
 dev_dependencies:

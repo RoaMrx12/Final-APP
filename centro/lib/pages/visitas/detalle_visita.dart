@@ -1,8 +1,11 @@
 import 'package:centro/models/visitas/detalleVisita.dart';
+import 'package:centro/pages/visitas/mapa_visita.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class DetalleVisitaPage extends StatelessWidget {
   final DetalleVisita detalleVisita;
@@ -108,6 +111,21 @@ class DetalleVisitaPage extends StatelessWidget {
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MapaPage(
+                latitud: detalleVisita.latitud,
+                longitud: detalleVisita.longitud,
+              ),
+            ),
+          );
+        },
+        child: Icon(Icons.map),
+        backgroundColor: Colors.blue,
       ),
     );
   }
