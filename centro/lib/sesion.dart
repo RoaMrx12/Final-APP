@@ -1,6 +1,6 @@
 class SesionActual {
   static String token = '';
-  static int? id;
+  static String id = '';
   static String cedula = '';
   static String nombre = '';
   static String apellido = '';
@@ -8,4 +8,16 @@ class SesionActual {
   static String correo = '';
   static String telefono = '';
   static String fechaNacimiento = '';
+
+  static void logout() {
+    token = '';
+    id = '';
+    cedula = '';
+    nombre = '';
+    apellido = '';
+    clave = '';
+    correo = '';
+    telefono = '';
+    fechaNacimiento = '';
+  }
 }

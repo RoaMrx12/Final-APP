@@ -30,18 +30,18 @@ class DetalleVisita {
   });
 
   factory DetalleVisita.fromMap(Map<String, dynamic> json) => DetalleVisita(
-    id: json["id"],
+    id: json["id"] != null ? int.tryParse(json["id"].toString()) : null,
     cedulaDirector: json["cedula_director"],
     codigoCentro: json["codigo_centro"],
     motivo: json["motivo"],
     fotoEvidenciaPath: json["foto_evidencia"],
     comentario: json["comentario"],
     notaVozPath: json["nota_voz"],
-    latitud: json["latitud"],
-    longitud: json["longitud"],
+    latitud: json["latitud"] is String ? double.parse(json["latitud"]) : json["latitud"],
+    longitud: json["longitud"] is String ? double.parse(json["longitud"]) : json["longitud"],
     fecha: json["fecha"],
     hora: json["hora"],
-    usuarioId: json["usuario_id"],
+    usuarioId: int.parse(json["usuario_id"].toString()),
   );
 
   Map<String, dynamic> toMap() => {

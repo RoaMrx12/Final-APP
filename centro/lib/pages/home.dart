@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:centro/widgets/base_page.dart';
 import 'package:centro/widgets/visita_card.dart';
-import '../models/visita.dart';
+import 'package:flutter/material.dart';
+import 'package:centro/services/api_service.dart';
+import 'package:centro/sesion.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,68 +10,48 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<List<dynamic>> futureVisitas;
 
-
-  final List<Visita> _visitas = [
-    Visita(
-      cedulaDirector: '123456789',
-      codigoCentro: 'C001',
-      motivo: 'Revisión general',
-      fotoEvidencia: '',
-      comentario: 'Comentario sobre la visita 1',
-      notaVoz: '',
-      latitud: 18.4655,
-      longitud: -69.9204,
-      fecha: '2024-07-30',
-      hora: '10:00', 
-      token: '',
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    futureVisitas = ApiService().getSituaciones(SesionActual.token);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Inicio'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Aquí puedes agregar la funcionalidad de búsqueda
-            },
-          ),
-        ],
-      ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Incidencias',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-         
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Visitas',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          ..._visitas.map((visita) => VisitaCard(
-            visita: visita,
-            onTap: () {
-              // Maneja la acción al hacer clic en una visita
-            },
-          )).toList(),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Agregar una nueva incidencia o visita
-        },
-        child: Icon(Icons.add),
+    return BasePage(
+      title: 'Visitas Realizadas',
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FutureBuilder<List<dynamic>>(
+          future: futureVisitas,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: No hay tecnico registrado.'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No hay visitas registradas.'));
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final visita = snapshot.data![index];
+                  return VisitaCard(
+                    codigoCentro: visita['codigo_centro'],
+                    motivo: visita['motivo'],
+                    fecha: visita['fecha'],
+                    hora: visita['hora'],
+                    onTap: () {
+                      // ToDo
+                    },
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }

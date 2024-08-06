@@ -5,6 +5,7 @@ class Video {
   final String fecha;
   final String titulo;
   final String descripcion;
+  final String? thubnailUrl;
   final String link;
 
   Video({
@@ -13,14 +14,15 @@ class Video {
     required this.titulo,
     required this.descripcion,
     required this.link,
+    this.thubnailUrl,
   });
 
   factory Video.fromMap(Map<String, dynamic> json) => Video(
-    id: json["id"],
-    fecha: json["fecha"],
-    titulo: json["titulo"],
-    descripcion: json["descripcion"],
-    link: json["link"],
+    id: json["id"] ?? '',
+    fecha: json["fecha"]?? '',
+    titulo: json["titulo"]?? '',
+    descripcion: json["descripcion"]?? '',
+    link: json["link"]?? '',
   );
 
   Map<String, dynamic> toMap() => {

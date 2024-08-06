@@ -1,8 +1,12 @@
+import 'package:centro/models/visitas/situacion.dart';
+import 'package:centro/models/visitas/detalleVisita.dart';
+import 'package:centro/models/requests/situacion_request.dart';
 import 'package:centro/pages/visitas/detalle_visita.dart';
+import 'package:centro/services/api_service.dart';
+import 'package:centro/sesion.dart';
+import 'package:centro/widgets/base_page.dart';
+import 'package:centro/widgets/visita_card.dart';
 import 'package:flutter/material.dart';
-import '../../models/visita.dart';
-import '../../models/visita.dart';
-import '../../services/db_service.dart';
 
 class VisitasRegistradas extends StatefulWidget {
   @override
@@ -10,52 +14,65 @@ class VisitasRegistradas extends StatefulWidget {
 }
 
 class _VisitasRegistradasState extends State<VisitasRegistradas> {
-  final DatabaseService _dbService = DatabaseService();
-
-  late Future<List<Visita>> _visitas;
+  late Future<List<Situacion>> futureVisitas;
 
   @override
   void initState() {
     super.initState();
-    _visitas = _dbService.fetchVisitas();
+    futureVisitas = ApiService().getSituaciones(SesionActual.token);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Visitas Registradas'),
-      ),
-      body: FutureBuilder<List<Visita>>(
-        future: _visitas,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No hay visitas registradas'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Visita visita = snapshot.data![index];
-                return ListTile(
-                  title: Text(visita.codigoCentro),
-                  subtitle: Text(visita.motivo),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetalleVista(visita: visita),
-                      ),
-                    );
+    return BasePage(
+      title: 'Visitas Realizadas',
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FutureBuilder<List<Situacion>>(
+          future: futureVisitas,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No hay visitas registradas.'));
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final visita = snapshot.data![index];
+                  return VisitaCard(
+                    codigoCentro: visita.codigoCentro,
+                    motivo: visita.motivo,
+                    fecha: visita.fecha,
+                    hora: visita.hora,
+                    onTap: () async {
+                    try {
+                      final detalleVisita = await ApiService().getDetalleSituacion(
+                        SituacionRequest(
+                          token: SesionActual.token,
+                          situacionId: visita.id!,
+                        ),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetalleVisitaPage(detalleVisita: detalleVisita),
+                        ),
+                      );
+                    } catch (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error al obtener detalles: $error')),
+                      );
+                    }
                   },
-                );
-              },
-            );
-          }
-        },
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }

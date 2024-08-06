@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import '../models/visita.dart';
+import '../models/visitas/visita.dart';
 
 class DatabaseService {
   static final DatabaseService _instance = DatabaseService._internal();
@@ -40,7 +40,7 @@ class DatabaseService {
         latitud REAL,
         longitud REAL,
         fecha TEXT,
-        hora TEXT
+        hora TEXT,
       )
     ''');
 

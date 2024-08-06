@@ -21,14 +21,14 @@ class Centro {
 
   // Constructor de fábrica para crear una instancia a partir de un mapa
   factory Centro.fromMap(Map<String, dynamic> json) => Centro(
-    idx: json["idx"],
-    codigo: json["codigo"],
-    nombre: json["nombre"],
-    coordenadas: json["coordenadas"],
-    distrito: json["distrito"],
-    regional: json["regional"],
-    dDmunicipal: json["d_dmunicipal"],
-  );
+  idx: json["idx"] ?? '',
+  codigo: json["codigo"] ?? '',
+  nombre: json["nombre"] ?? '',
+  coordenadas: json["coordenadas"] ?? '',
+  distrito: json["distrito"] ?? '',
+  regional: json["regional"] ?? '',
+  dDmunicipal: json["d_dmunicipal"] ?? '',
+);
 
   // Método para convertir una instancia a un mapa
   Map<String, dynamic> toMap() => {

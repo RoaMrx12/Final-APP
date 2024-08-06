@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 class Tecnico {
-  final int? id;
   final String cedula;
   final String nombre;
   final String apellido;
@@ -11,7 +10,6 @@ class Tecnico {
   final String fechaNacimiento;
 
   Tecnico({
-    this.id,
     required this.cedula,
     required this.nombre,
     required this.apellido,
@@ -22,7 +20,6 @@ class Tecnico {
   });
 
   factory Tecnico.fromMap(Map<String, dynamic> json) => Tecnico(
-    id: json["id"],
     cedula: json["cedula"],
     nombre: json["nombre"],
     apellido: json["apellido"],
@@ -33,14 +30,13 @@ class Tecnico {
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id,
     "cedula": cedula,
     "nombre": nombre,
     "apellido": apellido,
     "clave": clave,
     "correo": correo,
     "telefono": telefono,
-    "fecha_nacimiento": fechaNacimiento,
+    "fecha_nacimiento": fechaNacimiento, 
   };
 
   String toJson() => json.encode(toMap());

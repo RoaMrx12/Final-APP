@@ -1,32 +1,27 @@
 import 'package:flutter/material.dart';
-import '../models/visita.dart';
 
 class VisitaCard extends StatelessWidget {
-  final Visita visita;
+  final String codigoCentro;
+  final String motivo;
+  final String fecha;
+  final String hora;
   final VoidCallback onTap;
 
-  const VisitaCard({
-    Key? key,
-    required this.visita,
+  VisitaCard({
+    required this.codigoCentro,
+    required this.motivo,
+    required this.fecha,
+    required this.hora,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4.0,
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: ListTile(
-        contentPadding: EdgeInsets.all(16.0),
-        title: Text(
-          'Código: ${visita.codigoCentro}',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(
-          'Motivo: ${visita.motivo}\n'
-          'Fecha: ${visita.fecha}\n'
-          'Hora: ${visita.hora}',
-        ),
+        title: Text(codigoCentro),
+        subtitle: Text(motivo),
+        trailing: Text(fecha),
         onTap: onTap,
       ),
     );

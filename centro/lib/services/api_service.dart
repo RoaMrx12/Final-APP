@@ -1,18 +1,18 @@
 import 'dart:convert';
-import 'package:centro/models/cambiar_clave_request.dart';
+import 'package:centro/models/requests/cambiar_clave_request.dart';
 import 'package:centro/models/models.dart';
+import 'package:centro/models/requests/recuperar_clave_request.dart';
 import 'package:centro/sesion.dart';
-
 import '../api/api_keys.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
   static const String baseUrl = 'https://adamix.net/minerd';
-  static const String _baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
+  static const String weaterBaseUrl = 'https://api.openweathermap.org/data/2.5/weather';
   static const String _weatherApiKey = Environment.openWeatherApiKey;
 
-  Future<Map<String, dynamic>> getWeather(String city) async {
-    final url = Uri.parse('$_baseUrl?q=$city&appid=$_weatherApiKey&units=metric&lang=es');
+  Future<Map<String, dynamic>> getWeather(double latitude, double longitude) async {
+    final url = Uri.parse('$weaterBaseUrl?lat=$latitude&lon=$longitude&appid=$_weatherApiKey&units=metric&lang=es');
 
     final response = await http.get(url);
 
@@ -41,24 +41,24 @@ class ApiService {
   //Services para Api de Minerd
 
    Future<List<Centro>> getCentros(String regional) async {
-    final url = Uri.parse('$baseUrl/minerd/centros.php?regional=$regional');
+  final url = Uri.parse('$baseUrl/minerd/centros.php?regional=$regional');
 
-    final response = await http.get(url);
+  final response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
 
-      if (data['exito']) {
-        return (data['datos'] as List)
-            .map((centroJson) => Centro.fromMap(centroJson))
-            .toList();
-      } else {
-        throw Exception(data['mensaje']);
-      }
+    if (data['exito']) {
+      return (data['datos'] as List)
+          .map((centroJson) => Centro.fromMap(centroJson))
+          .toList();
     } else {
-      throw Exception('Error al obtener los centros');
+      throw Exception(data['mensaje']);
     }
+  } else {
+    throw Exception('Error al obtener los centros');
   }
+}
 
   Future<List<Noticia>> getNoticias() async {
     final url = Uri.parse('$baseUrl/def/noticias.php');
@@ -75,76 +75,90 @@ class ApiService {
 
   Future<List<Video>> getVideos() async {
     final url = Uri.parse('$baseUrl/def/videos.php');
-
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      return (data as List).map((videoJson) => Video.fromMap(videoJson)).toList();
+      final videosData = data['datos'] as List;
+      return videosData.map((videoJson) => Video.fromMap(videoJson)).toList();
     } else {
       throw Exception('Error al obtener los videos');
     }
   }
 
-  Future<bool> registrarTecnico(Tecnico tecnico) async {
-    final url = Uri.parse('$baseUrl/def/registro.php');
+  Future<Map<String, dynamic>> registrarTecnico(Tecnico tecnico) async {
+    final baseUrl = Uri.parse('https://adamix.net/minerd/def/registro.php');
+    final url = baseUrl.replace(queryParameters: {
+      'cedula': tecnico.cedula,
+      'nombre': tecnico.nombre,
+      'apellido': tecnico.apellido,
+      'clave': tecnico.clave,
+      'correo': tecnico.correo,
+      'telefono': tecnico.telefono,
+      'fecha_nacimiento': tecnico.fechaNacimiento,
+    });
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: tecnico.toJson(),
     );
-
-    final data = json.decode(response.body);
 
     if (response.statusCode == 200) {
-      return data['exito'];
+      final data = json.decode(response.body);
+      return {
+        'exito': data['exito'],
+        'mensaje': data['mensaje'],
+      };
     } else {
-      throw Exception(data['mensaje']);
+      final errorData = json.decode(response.body);
+      throw Exception(errorData['mensaje']);
     }
   }
 
-   Future<void> iniciarSesion(String cedula, String clave) async {
-    final url = Uri.parse('$baseUrl/def/iniciar_sesion.php');
+  Future<void> iniciarSesion(String cedula, String clave) async {
+  final bUrl = Uri.parse('$baseUrl/def/iniciar_sesion.php');
 
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'cedula': cedula,
-        'clave': clave,
-      }),
-    );
+  final url = bUrl.replace(queryParameters: {
+    'cedula': cedula,
+    'clave': clave,
+  });
 
-    final data = json.decode(response.body);
+  final response = await http.post(
+    url,
+    headers: {'Content-Type': 'application/json'},
+  );
 
-    if (data['exito']) {
-      final tecnicoData = data['datos'][0];
+  final data = json.decode(response.body);
 
-      SesionActual.token = data['token'];
-      SesionActual.id = tecnicoData['id'];
-      SesionActual.cedula = tecnicoData['cedula'];
-      SesionActual.nombre = tecnicoData['nombre'];
-      SesionActual.apellido = tecnicoData['apellido'];
-      SesionActual.clave = tecnicoData['clave'];
-      SesionActual.correo = tecnicoData['correo'];
-      SesionActual.telefono = tecnicoData['telefono'];
-      SesionActual.fechaNacimiento = tecnicoData['fecha_nacimiento'];
-    } else {
-      throw Exception(data['mensaje']);
-    }
+  if (data['exito']) {
+    final tecnicoData = data['datos'];
+
+    SesionActual.token = tecnicoData['token'] ?? '';
+    SesionActual.id = tecnicoData['id'] ?? '';
+    SesionActual.cedula = cedula;
+    SesionActual.nombre = tecnicoData['nombre'] ?? '';
+    SesionActual.apellido = tecnicoData['apellido'] ?? '';
+    SesionActual.clave = clave;
+    SesionActual.correo = tecnicoData['correo'] ?? '';
+    SesionActual.telefono = tecnicoData['telefono'] ?? '';
+    SesionActual.fechaNacimiento = tecnicoData['fecha_nacimiento'] ?? '';
+  } else {
+    throw Exception(data['mensaje']);
   }
+}
+
   
-  Future<bool> recuperarClave(String cedula, String correo) async {
-    final url = Uri.parse('$baseUrl/def/recuperar_clave.php');
+  Future<bool> recuperarClave(RecuperarClaveRequest request, String text) async {
+    final bUrl = Uri.parse('$baseUrl/def/recuperar_clave.php');
+
+    final url = bUrl.replace(queryParameters: {
+    'cedula': request.cedula,
+    'correo': request.correo,
+    });
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'cedula': cedula,
-        'correo': correo,
-      }),
     );
 
     final data = json.decode(response.body);
@@ -161,12 +175,25 @@ class ApiService {
   }
 
   Future<String> registrarVisita(Visita visita) async {
-    final url = Uri.parse('$_baseUrl/minerd/registrar_visita.php');
+    final bUrl = Uri.parse('$baseUrl/minerd/registrar_visita.php');
+
+    final url = bUrl.replace(queryParameters: {
+    'cedula_director': visita.cedulaDirector,
+    'codigo_centro': visita.codigoCentro,
+    'motivo': visita.motivo,
+    'foto_evidencia': visita.fotoPath,
+    'comentario': visita.comentario,
+    'nota_voz': visita.audioPath,
+    'latitud': visita.latitud,
+    'longitud': visita.longitud,
+    'fecha': visita.fecha,
+    'hora': visita.hora,
+    'token': SesionActual.token,
+    });
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: visita.toJson(),
     );
 
     final data = json.decode(response.body);
@@ -183,8 +210,13 @@ class ApiService {
   }
 
   Future<List<Situacion>> getSituaciones(String token) async {
-    final url = Uri.parse('$_baseUrl/def/situaciones.php');
-    final response = await http.post(url, body: {'token': token});
+    final bUrl = Uri.parse('$baseUrl/def/situaciones.php');
+
+    final url = bUrl.replace(queryParameters: {
+      'token': token
+    });
+
+    final response = await http.post(url);
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -199,32 +231,38 @@ class ApiService {
     }
   }
 
-   Future<DetalleVisita> getDetalleSituacion(SituacionRequest request) async {
-      final url = Uri.parse('$_baseUrl/def/situacion.php');
-      final response = await http.post(url, body: {
-        'token': request.token,
-        'situacion_id': request.situacionId.toString(),
-      });
+  Future<DetalleVisita> getDetalleSituacion(SituacionRequest request) async {
+    final bUrl = Uri.parse('$baseUrl/def/situacion.php');
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['exito']) {
-          return DetalleVisita.fromMap(data['datos']);
-        } else {
-          throw Exception(data['mensaje']);
-        }
+    final url = bUrl.replace(queryParameters: {
+      'token': request.token,
+      'situacion_id': request.situacionId.toString(),
+    });
+
+    final response = await http.post(url);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['exito']) {
+        return DetalleVisita.fromMap(data['datos']);
       } else {
-        throw Exception('Error al obtener la situación');
+        throw Exception(data['mensaje']);
       }
-   }
+    } else {
+      throw Exception('Error al obtener la situación');
+    }
+  }
 
   Future<String> cambiarClave(CambiarClaveRequest request) async {
-    final url = Uri.parse('$_baseUrl/def/cambiar_clave.php');
-    final response = await http.post(url, body: {
+    final bUrl = Uri.parse('$baseUrl/def/cambiar_clave.php');
+
+    final url = bUrl.replace(queryParameters: {
       'token': request.token,
       'clave_anterior': request.claveAnterior,
       'clave_nueva': request.claveNueva,
     });
+
+    final response = await http.post(url);
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);

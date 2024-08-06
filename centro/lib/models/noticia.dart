@@ -16,11 +16,11 @@ class Noticia {
   });
 
   factory Noticia.fromMap(Map<String, dynamic> json) => Noticia(
-    title: json["title"],
-    image: json["image"],
-    description: json["description"],
-    content: json["content"],
-    link: json["link"],
+    title: json["title"] ?? '',
+    image: json["image"] ?? '',
+    description: json["description"] ?? '',
+    content: json["content"] ?? '',
+    link: json["link"] ?? '',
   );
 
   Map<String, dynamic> toMap() => {
