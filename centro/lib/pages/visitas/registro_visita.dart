@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:centro/models/visita.dart';
@@ -34,17 +35,22 @@ class _RegistroVisitaState extends State<RegistroVisita> {
   final LocationService _locationService = LocationService();
 
   @override
-  void initState() {
-    super.initState();
-    _cedulaDirector = '';
-    _motivo = '';
-    _comentario = '';
-    _latitud = '';
-    _longitud = '';
-    _fecha = '';
-    _hora = '';
-    _obtenerUbicacion();
-  }
+void initState() {
+  super.initState();
+  _cedulaDirector = '';
+  _motivo = '';
+  _comentario = '';
+  _latitud = '';
+  _longitud = '';
+  _fotoEvidencia = null;
+  _notaVoz = null;
+
+  final now = DateTime.now();
+  _fecha = DateFormat('yyyy-MM-dd').format(now);
+  _hora = DateFormat('HH:mm').format(now);
+
+  _obtenerUbicacion();
+}
 
   Future<void> _obtenerUbicacion() async {
     try {
@@ -78,8 +84,9 @@ class _RegistroVisitaState extends State<RegistroVisita> {
         // Guardar en la base de datos local
         await DatabaseService().insertVisita(visita);
 
-        // Enviar al servidor remoto
+        // Enviar por POST
         final mensaje = await ApiService().registrarVisita(visita);
+        
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensaje)));
         Navigator.pop(context);
       } catch (e) {
@@ -150,29 +157,8 @@ class _RegistroVisitaState extends State<RegistroVisita> {
                   onChanged: (value) => _comentario = value,
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Latitud'),
-                  initialValue: _latitud,
-                  onChanged: (value) => _latitud = value,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese la latitud';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Longitud'),
-                  initialValue: _longitud,
-                  onChanged: (value) => _longitud = value,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese la longitud';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
                   decoration: InputDecoration(labelText: 'Fecha (YYYY-MM-DD)'),
+                  initialValue: _fecha,
                   onChanged: (value) => _fecha = value,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -183,6 +169,7 @@ class _RegistroVisitaState extends State<RegistroVisita> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Hora (HH:MM)'),
+                  initialValue: _hora,
                   onChanged: (value) => _hora = value,
                   validator: (value) {
                     if (value == null || value.isEmpty) {

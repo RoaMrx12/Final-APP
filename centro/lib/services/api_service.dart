@@ -210,6 +210,8 @@ class ApiService {
   }
 
   Future<List<Situacion>> getSituaciones(String token) async {
+
+    print(SesionActual.token);
     final bUrl = Uri.parse('$baseUrl/def/situaciones.php');
 
     final url = bUrl.replace(queryParameters: {

@@ -30,34 +30,33 @@ class Visita {
   });
 
   factory Visita.fromMap(Map<String, dynamic> json) => Visita(
-    id: json["id"],
-    cedulaDirector: json["cedulaDirector"],
-    codigoCentro: json["codigoCentro"],
-    motivo: json["motivo"],
-    fotoPath: json["fotoPath"],
-    comentario: json["comentario"],
-    audioPath: json["audioPath"],
-    latitud: json["latitud"],
-    longitud: json["longitud"],
-    fecha: json["fecha"],
-    hora: json["hora"],
-    token: json["token"]
-  );
+  id: json["id"],
+  cedulaDirector: json["cedulaDirector"],
+  codigoCentro: json["codigoCentro"],
+  motivo: json["motivo"],
+  fotoPath: json["fotoPath"],
+  comentario: json["comentario"],
+  audioPath: json["audioPath"],
+  latitud: json["latitud"].toString(),
+  longitud: json["longitud"].toString(),
+  fecha: json["fecha"],
+  hora: json["hora"],
+  token: '' 
+);
 
   Map<String, dynamic> toMap() => {
-    "id": id,
-    "cedulaDirector": cedulaDirector,
-    "codigoCentro": codigoCentro,
-    "motivo": motivo,
-    "fotoPath": fotoPath,
-    "comentario": comentario,
-    "audioPath": audioPath,
-    "latitud": latitud,
-    "longitud": longitud,
-    "fecha": fecha,
-    "hora": hora,
-    "token": token,
-  };
+  "id": id,
+  "cedulaDirector": cedulaDirector,
+  "codigoCentro": codigoCentro,
+  "motivo": motivo,
+  "fotoPath": fotoPath,
+  "comentario": comentario,
+  "audioPath": audioPath,
+  "latitud": latitud,
+  "longitud": longitud,
+  "fecha": fecha,
+  "hora": hora,
+};
 
   factory Visita.fromJson(String source) => Visita.fromMap(json.decode(source));
 

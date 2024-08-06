@@ -32,7 +32,7 @@ class _VisitasRegistradasState extends State<VisitasRegistradas> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Center(child: Text('Error: No hay técnico registrado.'));
+              return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(child: Text('No hay visitas registradas.'));
             } else {

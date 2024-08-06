@@ -40,7 +40,7 @@ class DatabaseService {
         latitud REAL,
         longitud REAL,
         fecha TEXT,
-        hora TEXT
+        hora TEXT,
       )
     ''');
 
